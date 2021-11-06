@@ -1,17 +1,49 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
 
-ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById('root')
-);
+import React, { useState } from "react"
+import ReactDOM from 'react-dom'
+import 'bootstrap/dist/css/bootstrap.min.css'
+import { Button, Container, InputGroup, FormControl } from 'react-bootstrap'
+import { razdrobit, shuntingYardAlgorithm } from "./calc"
+import calculatePostFix from "./postfix"
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+function Glavka() {
+  const [value, setValue] = useState('')
+  const [result, setResult] = useState()
+
+  const submit = () => {
+    if (!value) return
+    setResult(value + '=' + calculatePostFix(shuntingYardAlgorithm(razdrobit(value))))
+    setValue('')
+  }
+  
+  return (
+    <Container>
+      <h1 className='text-uppercase text-center'>интерпретатор</h1>
+      <InputGroup>
+        <FormControl
+          value={value}
+          onChange={e => setValue(e.target.value)}
+          placeholder="введите даннные"
+        />
+        <Button
+          variant="danger"
+          id="button-addon1"
+          onClick={() => submit()}
+        >
+          Вычислить
+        </Button>
+      </InputGroup>
+      {
+        result !== undefined ? (
+          <>
+            <h1 className='text-uppercase'>{result}</h1>
+          </>
+        ) : null
+      }
+    </Container>
+  )
+}
+
+ReactDOM.render(<Glavka />, document.getElementById('root'))
+
+
